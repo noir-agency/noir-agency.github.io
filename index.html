@@ -3,21 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Confirm Your Payment</title>
+<title>Noir Agency — Confirm Payment</title>
 <style>
   :root {
-    --ink: #1B2A2E;
-    --paper: #F6F4EF;
-    --line: #D8D3C6;
-    --accent: #2F6B5E;
-    --accent-dark: #234F45;
-    --error: #B3453A;
+    --bg: #000000;
+    --card: #0C0C0C;
+    --ink: #C9C9C5;
+    --muted: #5A5A56;
+    --line: #1C1C1A;
+    --accent: #B8B6AF;
+    --accent-dim: #8A8984;
+    --error: #8A6A6A;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     font-family: 'Georgia', 'Iowan Old Style', serif;
-    background: var(--paper);
+    background: var(--bg);
     color: var(--ink);
     min-height: 100vh;
     display: flex;
@@ -28,28 +30,32 @@
   .card {
     width: 100%;
     max-width: 420px;
-    background: #fff;
+    background: var(--card);
     border: 1px solid var(--line);
-    padding: 40px 32px;
+    padding: 44px 34px;
   }
   h1 {
     font-size: 22px;
     font-weight: 400;
-    margin: 0 0 6px;
-    letter-spacing: 0.2px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+    color: var(--accent);
   }
   p.sub {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 14px;
-    color: #5C6660;
+    font-size: 13px;
+    color: var(--muted);
     margin: 0 0 32px;
-    line-height: 1.5;
+    line-height: 1.6;
   }
   label {
     display: block;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 13px;
-    color: #5C6660;
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--muted);
     margin-bottom: 6px;
     margin-top: 20px;
   }
@@ -60,43 +66,46 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 15px;
     border: 1px solid var(--line);
-    background: var(--paper);
+    background: #000000;
     color: var(--ink);
     outline: none;
     transition: border-color 0.15s ease;
   }
-  input:focus { border-color: var(--accent); }
+  input::placeholder { color: #3D3D3A; }
+  input:focus { border-color: var(--accent-dim); }
   button {
     width: 100%;
-    margin-top: 28px;
+    margin-top: 30px;
     padding: 13px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 600;
-    color: #fff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #000000;
     background: var(--accent);
     border: none;
     cursor: pointer;
     transition: background 0.15s ease;
   }
-  button:hover { background: var(--accent-dark); }
-  button:disabled { background: #9CA8A2; cursor: not-allowed; }
+  button:hover { background: var(--accent-dim); }
+  button:disabled { background: #4A4A46; color: #8A8A85; cursor: not-allowed; }
   .status {
     margin-top: 18px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 14px;
+    font-size: 13px;
     text-align: center;
     display: none;
   }
   .status.show { display: block; }
-  .status.ok { color: var(--accent-dark); }
+  .status.ok { color: var(--accent-dim); }
   .status.err { color: var(--error); }
 </style>
 </head>
 <body>
 
 <div class="card">
-  <h1>Confirm your payment</h1>
+  <h1>Noir Agency</h1>
   <p class="sub">Paid via InstaPay? Enter the details below and we'll log it right away.</p>
 
   <form id="payForm">
