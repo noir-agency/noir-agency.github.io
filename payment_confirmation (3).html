@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirm Your Payment</title>
+<style>
+  :root {
+    --ink: #1B2A2E;
+    --paper: #F6F4EF;
+    --line: #D8D3C6;
+    --accent: #2F6B5E;
+    --accent-dark: #234F45;
+    --error: #B3453A;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Georgia', 'Iowan Old Style', serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 40px 32px;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 400;
+    margin: 0 0 6px;
+    letter-spacing: 0.2px;
+  }
+  p.sub {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    color: #5C6660;
+    margin: 0 0 32px;
+    line-height: 1.5;
+  }
+  label {
+    display: block;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    color: #5C6660;
+    margin-bottom: 6px;
+    margin-top: 20px;
+  }
+  label:first-of-type { margin-top: 0; }
+  input {
+    width: 100%;
+    padding: 12px 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  input:focus { border-color: var(--accent); }
+  button {
+    width: 100%;
+    margin-top: 28px;
+    padding: 13px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  button:hover { background: var(--accent-dark); }
+  button:disabled { background: #9CA8A2; cursor: not-allowed; }
+  .status {
+    margin-top: 18px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    text-align: center;
+    display: none;
+  }
+  .status.show { display: block; }
+  .status.ok { color: var(--accent-dark); }
+  .status.err { color: var(--error); }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Confirm your payment</h1>
+  <p class="sub">Paid via InstaPay? Enter the details below and we'll log it right away.</p>
+
+  <form id="payForm">
+    <label for="firstName">First name</label>
+    <input type="text" id="firstName" required placeholder="e.g. Mohamed">
+
+    <label for="lastName">Last name</label>
+    <input type="text" id="lastName" required placeholder="e.g. Ali">
+
+    <label for="email">Gmail address</label>
+    <input type="email" id="email" required placeholder="e.g. mohamed@gmail.com">
+
+    <label for="amount">Amount paid (EGP)</label>
+    <input type="number" id="amount" required min="1" step="0.01" placeholder="e.g. 500">
+
+    <label for="reference">Reference number</label>
+    <input type="text" id="reference" required placeholder="e.g. from your InstaPay receipt">
+
+    <button type="submit" id="submitBtn">Confirm payment</button>
+    <div class="status" id="status"></div>
+  </form>
+</div>
+
+<script>
+  // Replace this with your own Apps Script Web App URL
+  const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycby5KjcsVxepulRxu8uCfL1lwtweWKMqMP7sES7fgbBUvn24BJDX1gp6HR4GHcLYtaaOUg/exec";
+
+  const form = document.getElementById('payForm');
+  const btn = document.getElementById('submitBtn');
+  const status = document.getElementById('status');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const amount = document.getElementById('amount').value.trim();
+    const reference = document.getElementById('reference').value.trim();
+
+    if (!firstName || !lastName || !email || !amount || !reference) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    status.className = 'status';
+
+    try {
+      const params = new URLSearchParams({ firstName, lastName, email, amount, reference });
+      await fetch(`${WEBHOOK_URL}?${params.toString()}`, {
+        method: 'POST',
+        mode: 'no-cors'
+      });
+
+      // no-cors means we can't read the response, so we assume success
+      status.textContent = "Thanks — your payment has been logged.";
+      status.className = 'status show ok';
+      form.reset();
+    } catch (err) {
+      status.textContent = "Something went wrong. Please try again.";
+      status.className = 'status show err';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Confirm payment';
+    }
+  });
+</script>
+
+</body>
+</html>
